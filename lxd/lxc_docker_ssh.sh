@@ -20,7 +20,7 @@ fi
 CONTAINER_NAME="$1"
 
 # Create the LXC container for Docker
-lxc launch $FLAVOR $CONTAINER_NAME
+lxc launch -p default -p bridged $FLAVOR $CONTAINER_NAME
 lxc storage volume create docker "${CONTAINER_NAME}_fs"
 lxc config device add "$CONTAINER_NAME" docker \
   disk pool=docker source="${CONTAINER_NAME}_fs" path=/var/lib/docker

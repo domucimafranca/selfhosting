@@ -20,7 +20,7 @@ fi
 CONTAINER_NAME="$1"
 
 # Create the LXC container
-lxc launch $FLAVOR $CONTAINER_NAME
+lxc launch -p default -p bridged $FLAVOR $CONTAINER_NAME
 
 # Get the current user on the host system
 HOST_USER=$(id -un)
