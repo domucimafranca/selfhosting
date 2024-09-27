@@ -1,12 +1,15 @@
 # Setting up LXD on Ubuntu 24.04 with local network VMs
 We want to set up a new server that can host virtual machines using [LXD](https://canonical.com/lxd) so we can run [Linux containers](https://linuxcontainers.org/).  The process for LXD itself is quite straightforward for Ubuntu.  However, by default, the resulting Linux containers are given private IP addreses by the built-in bridge.  We want to modify this behavior so Linux containers have IP addresses served by the DHCP server of the host network.
 
-## References
+## Online references
 * https://documentation.ubuntu.com/lxd/en/latest/tutorial/first_steps/
 * https://blog.simos.info/how-to-make-your-lxd-containers-get-ip-addresses-from-your-lan-using-a-bridge/
 * https://ubuntu.com/tutorials/how-to-run-docker-inside-lxd-containers#1-overview
 
-
+## Scripts
+* [lxc_vanilla_ssh.sh](lxc_vanilla_ssh.sh)
+* [lxc_docker_ssh.sh](lxc_docker_ssh.sh)
+* [install_docker.ssh](../general/install_docker.sh)
 
 # Instructions
 
@@ -113,7 +116,8 @@ lxc launch -p default -p bridged ubuntu:24.04 c1
 
 Container c1 will now be a bridged vm!  
 
-To simplify setting up a bridged VM, I made a [helper script](https://github.com/domucimafranca/selfhosting/blob/master/docker_ssh_lxc.sh).  This script sets up ssh keys for easier and more secure access.
+To simplify setting up a bridged VM, I made a [helper script](lxc_vanilla_ssh.sh).  This script sets up ssh keys for easier and more secure access.
+
 
 ## Running Docker on the VMs
 There are [a few things to set up](https://ubuntu.com/tutorials/how-to-run-docker-inside-lxd-containers#1-overview) so that the VMs can run Docker correctly.  In the main, we want Docker-enabled VMs to use btrfs.  So ---
@@ -124,7 +128,7 @@ lxc storage create docker btrfs
 
 This creates a btrfs volume called `docker.`
 
-There are a few more commands after this to get Docker to run properly, the main one being to attach the docker volume to the VM.  All this is simplified by using a [helper script for Docker VMs](https://github.com/domucimafranca/selfhosting/blob/master/docker_ssh_lxc.sh).
+There are a few more commands after this to get Docker to run properly, the main one being to attach the docker volume to the VM.  All this is simplified by using a [helper script for Docker VMs](lxc_docker_ssh.sh). You will still need to install Docker, though, but you can simplify the process by using the [install_docker.sh](../general/install_docker.sh) script.
 
 You can see the docker volumes using the command `lxc storage volume list`.  The result --
 ```
