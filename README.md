@@ -7,3 +7,4 @@ What's in here --
 * [general](general) are general-purpose scripts for setting up a server
 * [special](special) are customized scripts for my use cases
 * [lxd](lxd) has my notes for setting up lxd on Ubuntu server; it also contains helper scripts for spinning up Linux containers
+* [tmux](tmux) custom configuration and notes
