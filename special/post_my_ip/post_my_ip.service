@@ -1,0 +1,13 @@
+[Unit]
+Description=Post IP address to Mastodon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/dom/scripts/post_my_ip.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
