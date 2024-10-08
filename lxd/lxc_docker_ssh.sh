@@ -46,8 +46,8 @@ lxc exec $CONTAINER_NAME -- echo "$HOST_USER:$PASSWORD" | lxc exec $CONTAINER_NA
 # Copy the authorized_keys file from the host to the guest
 lxc exec $CONTAINER_NAME -- mkdir -p /home/$HOST_USER/.ssh
 lxc file push ~/.ssh/authorized_keys $CONTAINER_NAME/home/$HOST_USER/.ssh/authorized_keys
-lxc exec $CONTAINER_NAME -- chown $HOST_USER:$HOST_USER /home/$HOST_USER/.ssh/authorized_keys
+lxc exec $CONTAINER_NAME -- chown -R $HOST_USER:$HOST_USER /home/$HOST_USER/.ssh
+lxc file push ~/install_docker.sh $CONTAINER_NAME/home/$HOST_USER/install_docker.sh
+lxc exec $CONTAINER_NAME -- chmod +x /home/$HOST_USER/install_docker.sh
 
 echo "LXC container '$CONTAINER_NAME' created with user '$HOST_USER'."
-
-
