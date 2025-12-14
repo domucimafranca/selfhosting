@@ -1,0 +1,59 @@
+services:
+  db:
+    # Podman needs the full registry path: docker.io/library/
+    image: docker.io/library/mariadb:10.11
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - db:/var/lib/mysql:Z
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    networks:
+      - nextcloud-net
+
+  app:
+    image: docker.io/library/nextcloud:latest
+    restart: always
+    ports:
+      - 8088:80
+    volumes:
+      - nextcloud:/var/www/html:Z
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nextcloud-net
+
+  redis:
+    image: docker.io/library/redis:alpine
+    restart: always
+    networks:
+      - nextcloud-net
+
+  cron:
+    image: docker.io/library/nextcloud:latest
+    restart: always
+    entrypoint: /cron.sh
+    volumes:
+      - nextcloud:/var/www/html:Z
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nextcloud-net
+
+volumes:
+  nextcloud:
+  db:
+
+networks:
+  nextcloud-net:
